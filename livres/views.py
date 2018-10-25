@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView
-from livres.models import Livre, Auteur, AuteurLivre
+from livres.models import Livre, Auteur
 from livres.forms import EditLivreForm, LivreSearchForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -57,27 +57,27 @@ def livre_search(request):
         livres = Livre.objects.all()
 
         titre = form.cleaned_data.get('titre')
-        if titre is not None:
-            livres = livres.filter(titre__icontains=titre)
+        # if titre is not None:
+        #     livres = livres.filter(titre__icontains=titre)
 
         auteur = form.cleaned_data.get('auteur')
-        if auteur is not None:
-            livres = []
-            if titre is None:
-                auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur)
+        # if auteur is not None:
+        livres = Livre.search(titre=titre, auteur=auteur).distinct()
+            # if titre is None:
+            #     auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur)
+            #
+            #     for al in auteur_livres:
+            #         if al.livre not in livres:
+            #             livres.append(al.livre)
+            # else:
+            #     auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur,
+            #                                                livre__titre__icontains=titre)
+            #
+            #     for al in auteur_livres:
+            #         if al.livre not in livres:
+            #             livres.append(al.livre)
 
-                for al in auteur_livres:
-                    if al.livre not in livres:
-                        livres.append(al.livre)
-            else:
-                auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur,
-                                                           livre__titre__icontains=titre)
-
-                for al in auteur_livres:
-                    if al.livre not in livres:
-                        livres.append(al.livre)
-
-            livres = sorted(livres, key=lambda livre: livre.titre)
+        # livres = sorted(livres, key=lambda livre: livre.titre)
 
     return render(
         request,

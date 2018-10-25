@@ -1,5 +1,5 @@
 from django import forms
-from livres.models import Livre, Auteur, AuteurLivre
+from livres.models import Livre, Auteur
 
 
 class EditLivreForm(forms.ModelForm):

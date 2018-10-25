@@ -47,8 +47,18 @@ function readCookieStartWith(name) {
     ids[cpt] = -1;
 
     document.getElementById('ids').innerHTML=ids;
+    var real_cpt = cpt-1;
+    if(real_cpt==0){
+        return ''
+    }else{
+        if(real_cpt == 1){
+            return real_cpt + " favori";
+        }else{
+            return real_cpt + " favoris";
 
-    return cpt-1 + " favoris";
+        }
+    }
+
 
 }
 function eraseCookie(name) {

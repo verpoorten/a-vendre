@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
@@ -19,24 +20,23 @@
 </head>
 <body>
 <header class="container">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a href="/" class="navbar-brand">Livres à vendre</a>
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-          <a class="nav-link" href="{% url 'livres' %}">Livres</a>
-      </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'auteurs' %}">Auteurs</a>
-        </li>
-
-
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'livre_search' %}">Recherche</a>
-        </li>
-        <li><a href="{% url 'favoris' %}" ><span id="nb_favoris" class="btn btn-primary"></span></a></li>
-    </ul>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a href="/" class="navbar-brand"><img src="{% static 'img/livres.png' %}" width="30px" style="margin-right: 10px;">LIVRES A VENDRE</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'livres' %}">Livres</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'auteurs' %}">Auteurs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'livre_search' %}">Recherche</a>
+            </li>
+            <li>
+                &nbsp;&nbsp;&nbsp;<a href="{% url 'favoris' %}"><span id="nb_favoris" class="btn btn-primary"></span></a>
+            </li>
+        </ul>
+    </nav>
 </header>
 <section class="container my-5">
 <span id="ids" style="visibility: hidden;display: none;"></span>
@@ -45,7 +45,7 @@
     <p>Sur ce site vous allez pouvoir trouver la liste des livres que j'ai à vendre.  </p>
      <p>   Je ne suis absolument pas de commerce.
         Ce sont des livres que ma mère et moi avons lus.</p>
-      <p>En général je demande 2 euros pour les formats pockets et 4 euros pour les grands formats.</p>
+      <p>En général je demande 2 euros pour les formats pocket et 4 euros pour les grands formats.</p>
 
       <p>
       Je propose de vous les échanger :
@@ -101,13 +101,11 @@
             {
                 $('#table_data').DataTable(
                         {
-
-                            "stateSave": true,
-                            "paging" : false,
-                            "ordering" : true,
-                            "info"  : false,
-                            "searching" : false,
-
+                        "stateSave": true,
+                        "paging" : false,
+                        "ordering" : true,
+                        "info"  : false,
+                        "searching" : false
                         });
 
                 $("button[id^='add_panier_']").on('click', function() {

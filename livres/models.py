@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import admin
-from livres.validator import validate_deadline
 from django.db.models.deletion import CASCADE, SET_DEFAULT, SET_NULL
 
 
@@ -31,11 +30,35 @@ class Personne(models.Model):
         return Personne.objects.get(pk=an_id)
 
 
+class AuteurAdmin(admin.ModelAdmin):
+    search_fields = ['nom']
+
+
+class Auteur(models.Model):
+    nom = models.CharField(max_length=100, blank=False, null=False)
+    prenom = models.CharField(max_length=100, blank=True, null=True)
+
+    @staticmethod
+    def find_all():
+        return Auteur.objects.all().order_by('nom', 'prenom')
+
+    @staticmethod
+    def find_auteur(an_id):
+        return Auteur.objects.get(pk=an_id)
+
+    def __str__(self):
+        return self.nom.upper() + ", " + self.prenom
+
+
 class Categorie(models.Model):
     libelle = models.CharField(max_length=100, blank=False, null=False)
 
     def __str__(self):
         return self.libelle
+
+
+class LivreAdmin(admin.ModelAdmin):
+    search_fields = ['titre']
 
 
 class Livre(models.Model):
@@ -63,6 +86,7 @@ class Livre(models.Model):
         verbose_name="image"
     )
     vendu = models.BooleanField(default=False)
+    auteurs = models.ManyToManyField(Auteur, related_name='livre_liste')
 
     @staticmethod
     def find_all():
@@ -72,8 +96,6 @@ class Livre(models.Model):
     def find_livre(an_id):
         return Livre.objects.get(pk=an_id)
 
-    def auteurs_livres(self):
-        return AuteurLivre.objects.filter(livre=self)
 
     def __str__(self):
         return self.titre
@@ -94,86 +116,26 @@ class Livre(models.Model):
                     livres.append(livre)
             return livres
 
-    @property
-    def auteurs_livres_str(self):
-        auteurs = []
-        for al in AuteurLivre.objects.filter(livre=self):
-            auteurs.append(al.auteur)
-        s = ""
-        cpt = 0
-        for a in auteurs:
-            if cpt > 0:
-                s = s + " / "
-            s = s + str(a)
-            cpt = cpt + 1
-        return s
 
-    @property
-    def auteurs_livres_str_prenom_nom(self):
-        auteurs = []
-        for al in AuteurLivre.objects.filter(livre=self):
-            auteurs.append(al.auteur)
-        s = ""
-        cpt = 0
-        for a in auteurs:
-            if cpt > 0:
-                s = s + " / "
-            s = s + str(a.prenom) + " " + str(a.nom)
-            cpt = cpt + 1
-        return s
 
-    @staticmethod
-    def find_by_auteur(auteur_id):
-        auteur = None
-        if auteur_id:
-            auteur = Auteur.find_auteur(auteur_id)
-        livres = []
-        if auteur:
-            list_livre_auteur = AuteurLivre.objects.filter(auteur=auteur).order_by('livre__titre')
-            for l in list_livre_auteur:
-                livres.append(l.livre)
-        return livres
+
 
     @staticmethod
     def find_by_titre(titre):
         return Livre.objects.filter(titre__icontains=titre)
 
 
-class AuteurAdmin(admin.ModelAdmin):
-    search_fields = ['nom']
-
-
-class Auteur(models.Model):
-    nom = models.CharField(max_length=100, blank=False, null=False)
-    prenom = models.CharField(max_length=100, blank=True, null=True)
 
     @staticmethod
-    def find_all():
-        return Auteur.objects.all().order_by('nom', 'prenom')
-
-    @staticmethod
-    def find_auteur(an_id):
-        return Auteur.objects.get(pk=an_id)
-
-    def __str__(self):
-        return self.nom.upper() + ", " + self.prenom
+    def search(**kwargs):
+        print('search')
+        qs = Livre.objects
 
 
-class AuteurLivreAdmin(admin.ModelAdmin):
-    raw_id_fields = ('livre', 'auteur')
-
-
-class AuteurLivre(models.Model):
-    livre = models.ForeignKey(Livre, blank=False, null=False, on_delete=CASCADE)
-    auteur = models.ForeignKey(Auteur, blank=False, null=False, on_delete=CASCADE)
-
-    @staticmethod
-    def find_auteur_livre(an_id):
-        return AuteurLivre.objects.get(pk=an_id)
-
-    @staticmethod
-    def find_auteur_livre_by_auteur(auteur):
-        return AuteurLivre.objects.filter(auteur=auteur)
-
-    def __str__(self):
-        return self.livre.titre + ", " + self.auteur.nom
+        if kwargs.get("titre"):
+            print(kwargs['titre'])
+            qs = qs.filter(titre__icontains=kwargs['titre'])
+        if kwargs.get("auteur"):
+            print(kwargs['auteur'])
+            qs = qs.filter(auteurs__nom__icontains=kwargs['auteur'])
+        return qs.select_related('categorie')
