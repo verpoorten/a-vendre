@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Favoris
+{% endblock %}
+
+{% block content %}
+  <h1>Favoris</h1>
+    {% if object_list %}
+        <form action="{% url 'favoris' %}">
+            {% csrf_token %}
+            <table class="table" >
+                <thead>
+                    <th>Titre</th>
+                    <th>Auteur(s)
+                    <th>Langue</th>
+                    <th>Prix</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                {% for livre in object_list %}
+                    <tr><td><a href="{% url 'livre_detail' livre.pk %}">{{ livre }}</a></td>
+                        <td>{{ livre.auteurs_livres_str }}</td>
+                        <td>{{ livre.langue }}</td>
+                        <td>{{ livre.prix |default:"-"}}</td>
+                        <td><button type="submit"
+                                    class="btn"
+                                    title="Retirer de la liste des favoris"
+                                    id="remove_panier_{{ livre.pk }}">
+                            <img src="{% static 'img/delete.png' %}" width="15px;">
+                            </button></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        <p>Si vous êtes intéressez pas ces livres n'hésitez pas à me contacter à l'adresse suivante : <A HREF="mailto:leila.verpoorten@gmail.com">leila.verpoorten@gmail.com</A> </p>
+    {% else %}
+        <p>Pas de livre dans vos favoris!</p>
+    {% endif %}
+{% endblock %}

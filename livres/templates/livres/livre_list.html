@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Liste des livres
+{% endblock %}
+
+{% block content %}
+  <h1> Liste des livres</h1>
+  {% if object_list %}
+{% include 'livres/livres_table.html' %}
+  {% else %}
+    <p>Aucune liste !</p>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Editer livre {{ livre }}
+{% endblock %}
+
+{% block content %}
+    <h1>Editer livre {{ livre }}</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input class="btn btn-primary" type="submit" value="OK"/>
+    </form>
+{% endblock %}

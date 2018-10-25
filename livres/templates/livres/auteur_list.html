@@ -1,0 +1,22 @@
+{% extends "base.html" %}>
+
+{% block title %}
+  Liste des auteurs
+{% endblock %}
+
+{% block content %}
+  <h1> Liste des auteurs</h1>
+  {% if object_list %}
+    <table id="table_data" class="table">
+    <thead><th>Auteur</th></thead>
+    <tbody>
+      {% for list in object_list %}
+        <tr><td>{{ list }}</td></tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  {% else %}
+    <p>Aucune liste !</p>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,25 @@
+<form>
+    {% csrf_token %}
+<table class="table" id="table_data">
+    <thead>
+        <th>Titre</th>
+        <th>Auteur(s)
+        <th>Langue</th>
+        <th>Prix</th>
+
+    </thead>
+    <tbody>
+    {% for livre in object_list %}
+        <tr><td><a href="{% url 'livre_detail' livre.pk %}">{{ livre }}</a></td>
+            <td>{{ livre.auteurs_livres_str }}</td>
+            <td>{{ livre.langue }}</td>
+            <td>{{ livre.prix |default:"-" }}</td>
+            <!--<td><button type="button" id="add_panier_{{ livre.pk }}" >+</button>
+
+                <button type="button" id="remove_panier_{{ livre.pk }}">-</button>
+            </td>-->
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</form>

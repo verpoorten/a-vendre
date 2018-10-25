@@ -1,0 +1,152 @@
+{% load static %}
+<html lang="en">
+<head>
+  <title>
+    {% block title %}
+      ...
+    {% endblock %}
+  </title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/cookie.js' %}"></script>
+</head>
+<body>
+<header class="container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a href="/" class="navbar-brand">Livres à vendre</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+          <a class="nav-link" href="{% url 'livres' %}">Livres</a>
+      </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'auteurs' %}">Auteurs</a>
+        </li>
+
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'livre_search' %}">Recherche</a>
+        </li>
+        <li><a href="{% url 'favoris' %}" ><span id="nb_favoris" class="btn btn-primary"></span></a></li>
+    </ul>
+  </nav>
+</header>
+<section class="container my-5">
+<span id="ids" style="visibility: hidden;display: none;"></span>
+  {% block content %}
+    <p>Bonjour,</p>
+    <p>Sur ce site vous allez pouvoir trouver la liste des livres que j'ai à vendre.  </p>
+     <p>   Je ne suis absolument pas de commerce.
+        Ce sont des livres que ma mère et moi avons lus.</p>
+      <p>En général je demande 2 euros pour les formats pockets et 4 euros pour les grands formats.</p>
+
+      <p>
+      Je propose de vous les échanger :
+      <ul>
+      <li>à Lisogne (Dinant)</li>
+      <li>à l'académie de musique de Dinant les lundis et jeudis vers 16h30</li>
+          <li>à l'académie de musique de Godinne les mercredis après-midi</li>
+
+          <li>à Ciney à la fin de journée de cours à l'école Saint-Joseph</li>
+      <li>en journée certains jours de la semaine sur Louvain-la-Neuve (entre 7h30 et 15h15)</li>
+      </ul>
+      </p>
+      <br>
+      <p>Si je dois les envoyer je pratique les tarifs de la poste Belge</p>
+      <p>N'hésitez pas à me contacter si vous voulez plus de détails : <A HREF="mailto:leila.verpoorten@gmail.com">leila.verpoorten@gmail.com</A></p>
+  {% endblock %}
+
+
+</section>
+{% if user.is_authenticated %}
+<footer class="container">
+  <nav class="navbar navbar-light bg-light">
+    {% if user.is_authenticated %}
+      Bienvenue {{ user.first_name }} {{ user.last_name }}
+      <div class="ml-auto">
+        {% if user.is_staff %}
+          <a href="{% url 'admin:index' %}">Administration</a>
+        {% endif %}
+        <a href="{% url 'logout' %}">Se déconnecter</a>
+      </div>
+    {% else %}
+      <a href="{% url 'login' %}">Se connecter</a>
+    {% endif %}
+  </nav>
+</footer>
+{% endif %}
+{% block script %}
+        <script>
+            function listCookies() {
+                var theCookies = document.cookie.split(';');
+                var aString = '';
+                for (var i = 1 ; i <= theCookies.length; i++) {
+                    aString += i + ' ' + theCookies[i-1] + "\n";
+                }
+                readCookieStartWith('livre_');
+                return aString;
+            }
+            function listeFavoris() {
+                return readCookieStartWith('livre_');
+            }
+
+            $(document).ready(function()
+            {
+                $('#table_data').DataTable(
+                        {
+
+                            "stateSave": true,
+                            "paging" : false,
+                            "ordering" : true,
+                            "info"  : false,
+                            "searching" : false,
+
+                        });
+
+                $("button[id^='add_panier_']").on('click', function() {
+                    console.log('add panier');
+                    var id = this.id;
+                    id = id.replace('add_panier_', '');
+                    createCookie('livre_'+id, id,7);
+                    console.log(readCookie('livre_'+id));
+                    document.getElementById('nb_favoris').innerHTML=listeFavoris();
+
+                });
+                $("button[id^='remove_panier_']").on('click', function() {
+                    var id = this.id;
+                    id = id.replace('remove_panier_', '');
+                    eraseCookie('livre_'+id, id,7);
+                    document.getElementById('nb_favoris').innerHTML=listeFavoris();
+                });
+
+            document.getElementById('nb_favoris').innerHTML=listeFavoris();
+
+           /* var elms = $('*[id^="add_panier_"]');
+            var ids = document.getElementById('ids').innerHTML;
+            for (i=0;i<elms.length;i++) {
+                var id_complet = elms[i].id;
+                var id = id_complet.replace('add_panier_', '');
+                var str_to_search = "," + id +",";
+                var pos = ids.indexOf(str_to_search);
+
+                if (pos >= 0) {
+                    document.getElementById(id_complet).style.backgroundColor = "green";
+                }else{
+                    document.getElementById(id_complet).style.backgroundColor = "red";
+                }
+            }*/
+            });
+        </script>
+
+{% endblock %}
+</body>
+
+</html>
+

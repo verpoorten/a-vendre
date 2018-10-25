@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Recherche livres
+{% endblock %}
+
+{% block content %}
+    <h1>Recherche</h1>
+    <form action="" method="POST" class="bg-light p-3 rounded">
+        {% csrf_token %}
+        <table>{{ form.as_table }}</table>
+        <br>
+        <input type="submit" value="Rechercher"/>
+    </form>
+
+    {% if not form.cleaned_data %}
+        <p>Introduire des critères de recherche.</p>
+    {% elif object_list %}
+        {% include 'livres/livres_table.html' %}
+    {% else %}
+        <p>Pas de livre correspondant!</p>
+    {% endif %}
+
+{% endblock %}
+

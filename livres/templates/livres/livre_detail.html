@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ livre.titre }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ livre.titre }} / {{ livre.auteurs_livres_str}}
+        &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'livre_detail' livre.pk %}">
+        {% if is_favori %}
+            <button id="remove_panier_{{ livre.pk }}" style="background-color: transparent; border: none;">
+                <img src="{% static 'img/coeur_rouge.png' %}" width="50px;" title="Cliquer pour retirer des favoris">
+            </button>
+
+        {% else %}
+            <button id="add_panier_{{ livre.pk }}" style="background-color: transparent; border: none;" title="Cliquer pour ajouter aux favoris">
+                <img src="{% static 'img/coeur_noir.png' %}" width="50px;">
+            </button>
+        {% endif %}
+        </a>
+    </h1>
+
+    <table>
+    <tr>
+        {% if livre.image %}
+        <td><img src="{% get_media_prefix %}{{ livre.image }}" width="150px"/></td>
+        {% endif %}
+        <td>
+            <dl>
+                <dt>Langue</dt><dd>{{ livre.langue|default:"-"}}</dd>
+                <dt>Catégorie</dt><dd>{{ livre.categorie|default:"-" }}</dd>
+                <dt>Remarque</dt><dd>{{ livre.remarque|default:"-" }}</dd>
+                <dt>Format</dt><dd>{{ livre.format|default:"-" }}</dd>
+                <dt>Prix</dt><dd>{{ livre.prix|default:"-" }}</dd>
+            </dl>
+        </td></tr>
+    </table>
+
+
+    {% if request.user.is_authenticated %}
+        <p>
+            <a href="{% url 'edit_livre' livre.pk %}">Editer</a>
+        </p>
+    {% endif %}
+{% endblock %}
