@@ -74,7 +74,8 @@ class Livre(models.Model):
     )
     FORMAT = (
         ('POCHE', 'Poche'),
-        ('CARTONNE', 'Cartonné')
+        ('CARTONNE', 'Cartonné'),
+        ('GRAND', 'Grand format')
     )
 
     titre = models.CharField(max_length=100, blank=False, null=False)
