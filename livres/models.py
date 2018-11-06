@@ -72,7 +72,8 @@ class LivreAdmin(admin.ModelAdmin):
 class Livre(models.Model):
     LANGUE = (
         ('FR', 'Français'),
-        ('ENG', 'Anglais')
+        ('ENG', 'Anglais'),
+        ('DE', 'Allemand')
     )
     FORMAT = (
         ('POCHE', 'Poche'),
@@ -95,6 +96,7 @@ class Livre(models.Model):
     )
     vendu = models.BooleanField(default=False)
     auteurs = models.ManyToManyField(Auteur, related_name='livre_liste')
+    neuf = models.BooleanField(default=False)
 
     def __str__(self):
         return self.titre
