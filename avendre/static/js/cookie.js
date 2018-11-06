@@ -46,9 +46,11 @@ function readCookieStartWith(name) {
     }
     ids[cpt] = -1;
 
+    document.getElementById('nb_favoris').setAttribute('style', 'display:inline;');
     document.getElementById('ids').innerHTML=ids;
     var real_cpt = cpt-1;
     if(real_cpt==0){
+        document.getElementById('nb_favoris').setAttribute('style', 'display:none;');
         return ''
     }else{
         if(real_cpt == 1){

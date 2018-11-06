@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ livre.titre }} / {{ livre.auteurs_livres_str}}
+    <h1><i>{{ livre.titre }}</i> / {{ livre.auteurs.all |join:' - ' }}
         &nbsp;&nbsp;&nbsp;
         <a href="{% url 'livre_detail' livre.pk %}">
         {% if is_favori %}

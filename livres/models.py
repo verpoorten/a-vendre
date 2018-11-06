@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import admin
 from django.db.models.deletion import CASCADE, SET_DEFAULT, SET_NULL
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.contrib import admin
+from django.db.models.deletion import CASCADE, SET_DEFAULT, SET_NULL
 
 
 class Personne(models.Model):
@@ -31,7 +36,7 @@ class Personne(models.Model):
 
 
 class AuteurAdmin(admin.ModelAdmin):
-    search_fields = ['nom']
+    search_fields = ['nom', 'prenom']
 
 
 class Auteur(models.Model):
@@ -58,7 +63,10 @@ class Categorie(models.Model):
 
 
 class LivreAdmin(admin.ModelAdmin):
-    search_fields = ['titre']
+    search_fields = ['titre', 'auteurs__nom', 'auteurs__prenom']
+    raw_id_fields = ('auteurs', )
+    list_display = ('titre', 'get_auteurs')
+    list_filter = ('auteurs',)
 
 
 class Livre(models.Model):
@@ -88,49 +96,12 @@ class Livre(models.Model):
     vendu = models.BooleanField(default=False)
     auteurs = models.ManyToManyField(Auteur, related_name='livre_liste')
 
-    @staticmethod
-    def find_all():
-        return Livre.objects.all().order_by('titre')
-
-    @staticmethod
-    def find_livre(an_id):
-        return Livre.objects.get(pk=an_id)
-
-
     def __str__(self):
         return self.titre
 
     @staticmethod
-    def find_by_etat_lecture(etat_lecture, user):
-        person = Personne.find_personne_by_user(user)
-        livres = []
-        if etat_lecture:
-            lecture_liste = Lecture.objects.filter(personne=person)
-            for lecture in lecture_liste:
-                livres.append(lecture.livre)
-            return livres
-        else:
-            liste_livre = Livre.objects.all()
-            for livre in liste_livre:
-                if not Lecture.objects.filter(personne=person):
-                    livres.append(livre)
-            return livres
-
-
-
-
-
-    @staticmethod
-    def find_by_titre(titre):
-        return Livre.objects.filter(titre__icontains=titre)
-
-
-
-    @staticmethod
     def search(**kwargs):
-        print('search')
         qs = Livre.objects
-
 
         if kwargs.get("titre"):
             print(kwargs['titre'])
@@ -138,4 +109,8 @@ class Livre(models.Model):
         if kwargs.get("auteur"):
             print(kwargs['auteur'])
             qs = qs.filter(auteurs__nom__icontains=kwargs['auteur'])
+
         return qs.select_related('categorie')
+
+    def get_auteurs(self):
+        return " - ".join(["{}, {}".format(p.nom, p.prenom) for p in self.auteurs.all()])

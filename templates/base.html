@@ -69,7 +69,6 @@
 <footer class="container">
   <nav class="navbar navbar-light bg-light">
     {% if user.is_authenticated %}
-      Bienvenue {{ user.first_name }} {{ user.last_name }}
       <div class="ml-auto">
         {% if user.is_staff %}
           <a href="{% url 'admin:index' %}">Administration</a>

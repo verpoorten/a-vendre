@@ -51,33 +51,11 @@ def home(request):
 
 def livre_search(request):
     form = LivreSearchForm(request.POST or None)
-
-    livres = []
+    livres = None
     if form.is_valid() and form.cleaned_data:
-        livres = Livre.objects.all()
-
         titre = form.cleaned_data.get('titre')
-        # if titre is not None:
-        #     livres = livres.filter(titre__icontains=titre)
-
         auteur = form.cleaned_data.get('auteur')
-        # if auteur is not None:
         livres = Livre.search(titre=titre, auteur=auteur).distinct()
-            # if titre is None:
-            #     auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur)
-            #
-            #     for al in auteur_livres:
-            #         if al.livre not in livres:
-            #             livres.append(al.livre)
-            # else:
-            #     auteur_livres = AuteurLivre.objects.filter(auteur__nom__icontains=auteur,
-            #                                                livre__titre__icontains=titre)
-            #
-            #     for al in auteur_livres:
-            #         if al.livre not in livres:
-            #             livres.append(al.livre)
-
-        # livres = sorted(livres, key=lambda livre: livre.titre)
 
     return render(
         request,
