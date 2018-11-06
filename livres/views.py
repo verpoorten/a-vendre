@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView
-from livres.models import Livre, Auteur
+from livres.models import Livre, Auteur, nouveautes_livres
 from livres.forms import EditLivreForm, LivreSearchForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 
 
 class LivresList(ListView):
@@ -46,6 +47,7 @@ def home(request):
     return render(
         request,
         'base.html',
+        {'nouveautes': nouveautes_livres}
     )
 
 
@@ -78,4 +80,19 @@ def favoris(request):
         'favoris.html',
         {
             'object_list': Livre.objects.filter(id__in=ids),
+        })
+
+
+def recherche_par_auteur(request, auteur_id):
+    auteur = get_object_or_404(Auteur, pk=auteur_id)
+    form = LivreSearchForm({'auteur': auteur})
+    livres = []
+    if form.is_valid() and form.cleaned_data:
+        livres = Livre.search(auteur=auteur).distinct()
+    return render(
+        request,
+        'livres/livre_search.html',
+        {
+            'object_list': livres,
+            'form': form,
         })

@@ -11,7 +11,7 @@
     <thead><th>Auteur</th></thead>
     <tbody>
       {% for list in object_list %}
-        <tr><td>{{ list }}</td></tr>
+        <tr><td><!--<a href="{% url 'recherche_par_auteur' list.pk %}">{{ list }}</a>-->{{ list }}</td></tr>
       {% endfor %}
     </tbody>
     </table>

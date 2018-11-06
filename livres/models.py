@@ -65,7 +65,7 @@ class Categorie(models.Model):
 class LivreAdmin(admin.ModelAdmin):
     search_fields = ['titre', 'auteurs__nom', 'auteurs__prenom']
     raw_id_fields = ('auteurs', )
-    list_display = ('titre', 'get_auteurs')
+    list_display = ('titre', 'get_auteurs', 'date_creation')
     list_filter = ('auteurs',)
 
 
@@ -106,13 +106,15 @@ class Livre(models.Model):
         qs = Livre.objects
 
         if kwargs.get("titre"):
-            print(kwargs['titre'])
             qs = qs.filter(titre__icontains=kwargs['titre'])
         if kwargs.get("auteur"):
-            print(kwargs['auteur'])
             qs = qs.filter(auteurs__nom__icontains=kwargs['auteur'])
 
         return qs.select_related('categorie')
 
     def get_auteurs(self):
         return " - ".join(["{}, {}".format(p.nom, p.prenom) for p in self.auteurs.all()])
+
+
+def nouveautes_livres():
+    return Livre.objects.filter(date_creation__isnull=False).order_by('-date_creation')[:10]

@@ -1,0 +1,28 @@
+{% load static %}
+<form>
+    {% csrf_token %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <table class="table">
+                <thead>
+                    <th>Titre</th>
+                    <th>Auteur(s)
+                    <th>Langue</th>
+                    <th>Prix</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                {% for livre in nouveautes %}
+                    <tr><td><a href="{% url 'livre_detail' livre.pk %}">{{ livre }}</a></td>
+                        <td>{{ livre.auteurs.all |join:' - ' }}</td>
+                        <td>{{ livre.langue }}</td>
+                        <td>{{ livre.prix |default:"-" }}</td>
+                        <td>{% if livre.neuf %}<img src="{% static 'img/nouveau.jpg' %}" width="50px;" title="Livre neuf!">{% endif %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

@@ -1,3 +1,4 @@
+{% load static %}
 <form>
     {% csrf_token %}
 <br>
@@ -10,7 +11,7 @@
         </thead>
         <tbody>
         {% for livre in object_list %}
-            <tr><td><a href="{% url 'livre_detail' livre.pk %}">{{ livre }}</a></td>
+            <tr><td>{% if livre.neuf %}<img src="{% static 'img/nouveau.jpg' %}" width="50px;" title="Livre neuf!">{% endif %}<a href="{% url 'livre_detail' livre.pk %}">{{ livre }}</a></td>
                 <td>{{ livre.auteurs.all |join:' - ' }}</td>
                 <td>{{ livre.langue }}</td>
                 <td>{{ livre.prix |default:"-" }}</td>
