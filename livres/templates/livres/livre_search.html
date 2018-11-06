@@ -6,11 +6,10 @@
 
 {% block content %}
     <h1>Recherche</h1>
-    <form action="" method="POST" class="bg-light p-3 rounded">
+    <form action="" method="POST" >
         {% csrf_token %}
-        <table>{{ form.as_table }}</table>
-        <br>
-        <input type="submit" value="Rechercher"/>
+        <table class="table table-condensed">{{ form.as_table }}</table>
+          <input type="submit" value="Rechercher" class="btn btn-primary"/>
     </form>
 
     {% if not form.cleaned_data %}

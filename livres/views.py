@@ -6,6 +6,7 @@ from livres.forms import EditLivreForm, LivreSearchForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse, HttpResponseRedirect
 
 
 class LivresList(ListView):
@@ -57,7 +58,7 @@ def livre_search(request):
     if form.is_valid() and form.cleaned_data:
         titre = form.cleaned_data.get('titre')
         auteur = form.cleaned_data.get('auteur')
-        livres = Livre.search(titre=titre, auteur=auteur).distinct()
+        livres = Livre.search(titre=titre, auteur_nom=auteur).distinct()
 
     return render(
         request,
@@ -87,8 +88,9 @@ def recherche_par_auteur(request, auteur_id):
     auteur = get_object_or_404(Auteur, pk=auteur_id)
     form = LivreSearchForm({'auteur': auteur})
     livres = []
-    if form.is_valid() and form.cleaned_data:
-        livres = Livre.search(auteur=auteur).distinct()
+    # if form.is_valid() and form.cleaned_data:
+    livres = Livre.search(auteur=auteur).distinct()
+    print(livres)
     return render(
         request,
         'livres/livre_search.html',
@@ -96,3 +98,4 @@ def recherche_par_auteur(request, auteur_id):
             'object_list': livres,
             'form': form,
         })
+    # return HttpResponseRedirect(reverse('livre_search'))

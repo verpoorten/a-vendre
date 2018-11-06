@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import admin
 from django.db.models.deletion import CASCADE, SET_DEFAULT, SET_NULL
+from django.db.models import Q
 
 
 class Personne(models.Model):
@@ -43,13 +44,9 @@ class Auteur(models.Model):
     nom = models.CharField(max_length=100, blank=False, null=False)
     prenom = models.CharField(max_length=100, blank=True, null=True)
 
-    @staticmethod
-    def find_all():
-        return Auteur.objects.all().order_by('nom', 'prenom')
-
-    @staticmethod
-    def find_auteur(an_id):
-        return Auteur.objects.get(pk=an_id)
+    @property
+    def has_books(self):
+        return Livre.objects.filter(auteurs=self).exists()
 
     def __str__(self):
         return self.nom.upper() + ", " + self.prenom
@@ -107,8 +104,12 @@ class Livre(models.Model):
 
         if kwargs.get("titre"):
             qs = qs.filter(titre__icontains=kwargs['titre'])
+        if kwargs.get("auteur_nom"):
+            nom = kwargs['auteur_nom']
+            qs = qs.filter(Q(auteurs__prenom__icontains=nom) | Q(auteurs__nom__icontains=nom))
+
         if kwargs.get("auteur"):
-            qs = qs.filter(auteurs__nom__icontains=kwargs['auteur'])
+            qs = qs.filter(auteurs__id=kwargs['auteur'].id)
 
         return qs.select_related('categorie')
 
