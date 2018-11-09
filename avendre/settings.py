@@ -83,11 +83,15 @@ WSGI_APPLICATION = 'avendre.wsgi.application'
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #         'NAME': 'avendre',
+#         'USER': 'leila',
 #         'PASSWORD': 'leila',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     },
 # }
+
+
+
 
 DATABASES = {'default': dj_database_url.config(conn_max_age=600,
                                                default='postgres://avendre_usr:dev@localhost:5432/avendre')}
@@ -133,7 +137,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media/')
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static'),
