@@ -24,9 +24,7 @@
 
     <table>
     <tr>
-        {% if livre.image %}
-        <td><img src="{% get_media_prefix %}{{ livre.image }}" width="150px"/></td>
-        {% endif %}
+
         <td>
             <dl>
                 <dt>Langue</dt><dd>{{ livre.langue|default:"-"}}</dd>
@@ -36,6 +34,9 @@
                 <dt>Prix</dt><dd>{{ livre.prix|default:"-" }}</dd>
             </dl>
         </td></tr>
+        {% if livre.image %}
+            <tr><td><img src="{% get_media_prefix %}{{ livre.image }}" width="500px"/></td></tr>
+        {% endif %}
     </table>
 
 
