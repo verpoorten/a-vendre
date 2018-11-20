@@ -1,0 +1,6 @@
+[
+  {"model":"livres.etat", "fields": {"etat": "Pages jaunies" }},
+  {"model":"livres.etat", "fields": {"etat": "Couverture légèrement abimée" }},
+  {"model":"livres.etat", "fields": {"etat": "Quasi neuf" }},
+  {"model":"livres.etat", "fields": {"etat": "Pages volantes" }}
+]

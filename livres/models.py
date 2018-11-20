@@ -66,6 +66,14 @@ class LivreAdmin(admin.ModelAdmin):
     list_filter = ('auteurs',)
 
 
+class EtatAdmin(admin.ModelAdmin):
+    list_display = ('etat',)
+
+
+class Etat(models.Model):
+    etat = models.CharField(max_length=100, blank=True, null=True)
+
+
 class Livre(models.Model):
     LANGUE = (
         ('FR', 'Français'),
@@ -95,6 +103,7 @@ class Livre(models.Model):
     vendu = models.BooleanField(default=False)
     auteurs = models.ManyToManyField(Auteur, related_name='livre_liste')
     neuf = models.BooleanField(default=False)
+    etats = models.ManyToManyField(Etat, related_name='etat_liste')
 
     def __str__(self):
         return self.titre
@@ -118,5 +127,8 @@ class Livre(models.Model):
         return " - ".join(["{}, {}".format(p.nom, p.prenom) for p in self.auteurs.all()])
 
 
+
 def nouveautes_livres():
     return Livre.objects.filter(date_creation__isnull=False).order_by('-date_creation')[:10]
+
+
