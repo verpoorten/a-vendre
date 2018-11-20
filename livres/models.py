@@ -73,6 +73,9 @@ class EtatAdmin(admin.ModelAdmin):
 class Etat(models.Model):
     etat = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.etat
+
 
 class Livre(models.Model):
     LANGUE = (
