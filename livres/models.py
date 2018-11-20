@@ -106,7 +106,7 @@ class Livre(models.Model):
     vendu = models.BooleanField(default=False)
     auteurs = models.ManyToManyField(Auteur, related_name='livre_liste')
     neuf = models.BooleanField(default=False)
-    etats = models.ManyToManyField(Etat, related_name='etat_liste')
+    etats = models.ManyToManyField(Etat, related_name='etat_liste', blank=True, null=True)
 
     def __str__(self):
         return self.titre
