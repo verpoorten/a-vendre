@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'livres',
+    'dropbox',
+    'storages'
 
 ]
 
@@ -78,7 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'avendre.wsgi.application'
 
-
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -89,8 +91,8 @@ WSGI_APPLICATION = 'avendre.wsgi.application'
 #         'PORT': '5432',
 #     },
 # }
-
-
+#
+#
 
 
 DATABASES = {'default': dj_database_url.config(conn_max_age=600,
@@ -144,3 +146,8 @@ STATICFILES_DIRS = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROP_BOX_ACCESS_TOKEN = os.environ['DROP_BOX_ACCESS_TOKEN']
+DROPBOX_ROOT_PATH =  os.environ['DROPBOX_ROOT_PATH']
+DROPBOX_OAUTH2_TOKEN = os.environ['DROP_BOX_ACCESS_TOKEN']

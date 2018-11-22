@@ -35,7 +35,7 @@
             </dl>
         </td></tr>
         {% if livre.image %}
-            <tr><td><img src="{% get_media_prefix %}{{ livre.image }}" width="500px"/></td></tr>
+            <tr><td><img src="{{ livre.image.url }}" width="500px"/></td></tr>
         {% endif %}
     </table>
 
