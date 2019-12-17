@@ -10,6 +10,7 @@ class EditLivreForm(forms.ModelForm):
 
 class LivreSearchForm(forms.Form):
     titre = forms.CharField(max_length=100,
-                            required=False)
+                            required=False,
+                            help_text="(Attention aux accents si vous cherchez 'étrange' et que c'est 'Etrange' qui est encodé ce ne sera pas trouvé!)")
     auteur = forms.CharField(max_length=100,
                              required=False)
