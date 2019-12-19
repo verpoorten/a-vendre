@@ -7,6 +7,11 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
+from livres.business.excel import LivresToExcel
+from openpyxl.writer.excel import save_virtual_workbook
+from django.http import HttpResponse
+
+CONTENT_TYPE_XLS = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=binary'
 
 
 class LivresList(ListView):
@@ -90,7 +95,7 @@ def recherche_par_auteur(request, auteur_id):
     livres = []
     # if form.is_valid() and form.cleaned_data:
     livres = Livre.search(auteur=auteur).distinct()
-    print(livres)
+
     return render(
         request,
         'livres/livre_search.html',
@@ -99,3 +104,13 @@ def recherche_par_auteur(request, auteur_id):
             'form': form,
         })
     # return HttpResponseRedirect(reverse('livre_search'))
+
+
+def xls(request):
+    excel = LivresToExcel().to_excel()
+    response = HttpResponse(excel, content_type=CONTENT_TYPE_XLS)
+    filename = "{workbook_name}.xlsx".format(
+        workbook_name=str("livres_a_vendre")
+    )
+    response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+    return response

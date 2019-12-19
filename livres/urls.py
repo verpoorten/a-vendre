@@ -13,6 +13,5 @@ urlpatterns = [
     url(r'^livre_search/$', views.livre_search, name='livre_search'),
     url(r'^favoris/$', views.favoris, name='favoris'),
     url(r'^auteur_search/(?P<auteur_id>\d+)/$', views.recherche_par_auteur, name='recherche_par_auteur'),
-
-
+    url(r'xls/', views.xls, name='xls'),
 ]
