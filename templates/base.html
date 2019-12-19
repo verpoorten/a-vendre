@@ -102,7 +102,7 @@
 
             $(document).ready(function()
             {
-                $('#table_data').DataTable(
+                var table = $('#table_data').DataTable(
                         {
                         "stateSave": true,
                         "paging" : false,
@@ -110,6 +110,8 @@
                         "info"  : false,
                         "searching" : false
                         });
+
+                $( table.table().container() ).removeClass( 'form-inline' );
 
                 $("button[id^='add_panier_']").on('click', function() {
                     console.log('add panier');
